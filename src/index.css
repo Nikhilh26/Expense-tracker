@@ -5,9 +5,114 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url(/public/Screenshot\ \(34\).png);
+  /*   */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.shift-left{
+  float: right;
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-row{
+  display: flex;
+  direction: row;
+}
+
+.App-flex-column{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+}
+
+.Main-Doughnut-Component{
+  background-color: aliceblue;
+  margin-top: 100px;
+  margin-left: 20px;
+  margin-right: 20px;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.Form-Main-Component{
+  height: 500px;
+  background-color:aliceblue;
+  margin-top: 75px;
+  text-align: center;
+  border-radius: 15px;
+}
+
+.Expense-input input{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 50%  ;
+  margin: auto;
+  border: 0px;
+  background-color: aliceblue;
+  border-bottom:2px solid  #555455;
+  outline: none;
+}
+
+.Display-Name{
+  font-size: 50px;
+  font-weight: bolder;
+  width: 100%;
+  text-align: center;
+}
+
+div::-webkit-scrollbar {
+  width: 8px;
+}
+
+div::-webkit-scrollbar-thumb {
+  background-color: #888;
+}
+
+div::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+div::-webkit-scrollbar-thumb:hover {
+  background-color: #555455;
+}
+
+.Expense-Bottom{
+  border-bottom: 15px solid violet;
+}
+
+.Income-Bottom{
+  border-bottom: 15px solid purple;
+}
+
+#DropDown-Categories{
+  border: 0px;
+  background-color: aliceblue;
+  border-bottom: 2px solid grey;
+  outline: none;
+}
+
+#DropDown-Type{
+  border: 0px;
+  background-color: aliceblue;
+  border-bottom: 2px solid grey;
+  outline: none;
+}
+
+.Add-Btn{
+  margin-top: 10px;
+  width: 96%;
+  padding: 2px;
+  font-weight: 300;
+  border-color: #555455;
+  margin-bottom: 5px;
+}
+
+.App-flex-column-2{
+  width: 100%;
+}
+
+.MoneyOffCsredIcon {
+  width: 24px;
+  height: 24px;
 }
