@@ -1,194 +1,198 @@
-import React,{useState} from 'react'
+import React, { useState, useEffect } from 'react';
 import FormMainComponent from './FormMainComponent';
-import MainDoughnutComponent from './MainDoughnutComponent';
-import {formatAmount} from './Constants/DateFormatter';
-import './../index.css'
-const incomeColors = ['#123123', '#154731', '#165f40', '#16784f', '#14915f', '#10ac6e', '#0bc77e', '#04e38d', '#00ff9d'];
-const expenseColors = ['#b50d12', '#bf2f1f', '#c9452c', '#d3583a', '#dc6a48', '#e57c58', '#ee8d68', '#f79d79', '#ffae8a', '#cc474b', '#f55b5f'];
+import DoughnutComponent from './DoughnutComponent';
+import { formatAmount } from './Constants/DateFormatter';
+import { initialIncomeState, initialExpenseState } from './Constants/Options';
+import './../index.css';
 
-
-export const Context=React.createContext()
+const initialState = {
+  incomeCategories: initialIncomeState,
+  expenseCategories: initialExpenseState
+};
 
 export default function FormValues() {
-    const [totalIC,setTIC]=useState(0);
-    const [totalExp,setTExp]=useState(0);
-    const [ChartDataIC,updateCD_IC] = useState(
-    {
+  const [totalIC, setTIC] = useState(0);
+  const [totalExp, setTExp] = useState(0);
+
+  const [ChartDataIC, updateCD_IC] = useState({
     labels: [],
-    
-    datasets: [{
-      label: 'Votes',
-      data: [],
-      backgroundColor: []
-    }]
-  
-  });
-  
-  const [ChartDataExp,updateCD_Exp]=useState(
-    {
-      labels: [],
-      
-      datasets: [{
+    datasets: [
+      {
         label: 'Votes',
         data: [],
-        backgroundColor: []
-      }]
-    
+        backgroundColor: [],
+      },
+    ],
+  });
+
+  const [ChartDataExp, updateCD_Exp] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: 'Votes',
+        data: [],
+        backgroundColor: [],
+      },
+    ],
+  });
+
+  const [incomeCategories, updateIC] = useState(() => {
+    const storedData = localStorage.getItem('income-values');
+    return storedData ? JSON.parse(storedData) : initialState.incomeCategories;
+  });
+
+  const [expenseCategories, updateEC] = useState(() => {
+    const storedData = localStorage.getItem('expense-values');
+    return storedData ? JSON.parse(storedData) : initialState.expenseCategories;
+  });
+
+  useEffect(() => {
+    const res1 = getValues(incomeCategories);
+    const res2 = getValues(expenseCategories);
+
+    console.log(res1);
+    console.log(res2);
+
+    if (res1.sum > 0) {
+      setTIC(res1.sum);
+
+      updateCD_IC({
+        labels: res1.label,
+        datasets: [
+          {
+            label: 'Votes',
+            data: res1.amountArray,
+            backgroundColor: res1.colorArray,
+          },
+        ],
+      });
+    }
+
+    if (res2.sum > 0) {
+      setTExp(res2.sum);
+      updateCD_Exp({
+        labels: res2.label,
+        datasets: [
+          {
+            label: 'Votes',
+            data: res2.amountArray,
+            backgroundColor: res2.colorArray,
+          },
+        ],
+      });
+    }
+
+  }, []);
+
+  const getValues = (Values) => {
+
+    let amountArray = [];
+    let colorArray = [];
+    let label = [];
+    let sum = 0;
+
+    Values.forEach((element) => {
+      if (element.amount > 0) {
+        amountArray.push(element.amount);
+        colorArray.push(element.color);
+        label.push(element.type);
+        sum += element.amount;
+      }
     });
 
-  const [incomeCategories,updateIC]=useState(
-    [
-      { type: 'Business', amount: 0, color: incomeColors[0] },
-      { type: 'Investments', amount: 0, color: incomeColors[1] },
-      { type: 'Extra income', amount: 0, color: incomeColors[2] },
-      { type: 'Deposits', amount: 0, color: incomeColors[3] },
-      { type: 'Lottery', amount: 0, color: incomeColors[4] },
-      { type: 'Gifts', amount: 0, color: incomeColors[5] },
-      { type: 'Salary', amount: 0, color: incomeColors[6] },
-      { type: 'Savings', amount: 0, color: incomeColors[7] },
-      { type: 'Rental income', amount: 0, color: incomeColors[8] },
-    ]
-  )
-  const [expenseCategories,updateEC]=useState(
-    [
-      { type: 'Bills', amount: 0, color: expenseColors[0] },
-      { type: 'Car', amount: 0, color: expenseColors[1] },
-      { type: 'Clothes', amount: 0, color: expenseColors[2] },
-      { type: 'Travel', amount: 0, color: expenseColors[3] },
-      { type: 'Food', amount: 0, color: expenseColors[4] },
-      { type: 'Shopping', amount: 0, color: expenseColors[5] },
-      { type: 'House', amount: 0, color: expenseColors[6] },
-      { type: 'Entertainment', amount: 0, color: expenseColors[7] },
-      { type: 'Phone', amount: 0, color: expenseColors[8] },
-      { type: 'Pets', amount: 0, color: expenseColors[9] },
-      { type: 'Other', amount: 0, color: expenseColors[10] },
-    ]
-  )
-  
-    const updateIncome=(category,amount)=>{
-       console.log(amount)
-        return new Promise((resolve,reject)=>{
-          let a=-1;
-          
-          const Updatevalues=
-          incomeCategories.map((element)=>{
-            if(element.type===category){
-              a=0;
-              setTIC(Number(Number(totalIC)+Number(amount)))
-              return {...element,amount:element.amount+amount};
-            }
-                  return element;
-          })
-          
-          updateIC(Updatevalues);
-          
-          let amountArray=[];
-          let colorArray=[];
-          let label=[];
+    return {
+      amountArray: amountArray,
+      colorArray: colorArray,
+      label: label,
+      sum: sum
+    }
+  }
+  const updateCategories = (category, amount, update_categories, type) => {
 
-          Updatevalues.forEach((element)=>{
-            if(element.amount>0){
-                amountArray.push(element.amount);
-                colorArray.push(element.color);
-                label.push(element.type);
-            }
-          })
+    return new Promise((resolve, reject) => {
 
-          updateCD_IC({
-    
-            labels:label,
-            
-            datasets: [{
+      let a = -1;
+      const updatedValues = update_categories.map((element) => {
+        if (element.type === category) {
+          a = 0;
+          const category_amount_updated = Number(amount) + Number(element.amount);
+          return { ...element, amount: category_amount_updated };
+        }
+        return element;
+      });
+
+
+      const result = getValues(updatedValues);
+
+      if (type === "Income") {
+
+        updateIC(updatedValues);
+        setTIC(result.sum);
+
+        updateCD_IC({
+          labels: result.label,
+          datasets: [
+            {
               label: 'Votes',
-              data: amountArray,
-              backgroundColor: colorArray
-            }]
-          
-          })
+              data: result.amountArray,
+              backgroundColor: result.colorArray,
+            },
+          ],
+        });
 
-          console.log(Updatevalues);
-          console.log(ChartDataIC);
-
-          
-          if(a===0){
-            resolve("resolved");
-          }else{
-            reject("rejected ");
-          }
-        })
-      }
-      
-    const updateExpense=(category,amount)=>{
-        return new Promise((resolve,reject)=>{
-          let a=-1;
-          const Updatevalues=
-          expenseCategories.map((element)=>{
-            if(element.type===category){
-                a=0;
-                setTExp(Number(Number(totalExp)+Number(amount)));
-                return {...element,amount:element.amount+amount};
-            }
-            console.log(totalExp)
-            return element;
-          })
-          
-          let amountArray=[];
-          let colorArray=[];
-          let label=[];
-
-          Updatevalues.forEach((element)=>{
-            if(element.amount>0){
-                amountArray.push(element.amount);
-                colorArray.push(element.color);
-                label.push(element.type);
-            }
-          })
-
-          updateCD_Exp({
-    
-            labels:label,
-            
-            datasets: [{
+      } else {
+        updateEC(updatedValues);
+        setTExp(result.sum);
+        updateCD_Exp({
+          labels: result.label,
+          datasets: [
+            {
               label: 'Votes',
-              data: amountArray,
-              backgroundColor: colorArray
-            }]
-          
-          })
-
-          updateEC(Updatevalues);
-
-          if(a===0){
-            resolve("resolved");
-          }else{
-            reject("rejected");
-          }
-        })
+              data: result.amountArray,
+              backgroundColor: result.colorArray,
+            },
+          ],
+        });
       }
-  
-      return (
-      <Context.Provider value={[updateIncome,updateExpense]}>
 
-      <div className='App-flex-column'>
-        
-        <div className='Main-Doughnut-Component Income-Bottom'>
-          <h3 style={{textAlign:'center'}}>Income-{formatAmount(totalIC)}</h3>
-          <MainDoughnutComponent val={ChartDataIC}/> 
-        </div>
-        
-        <div>
-          <FormMainComponent />
-        </div>
-        
-        <div className='Main-Doughnut-Component Expense-Bottom'>
-          <h3 style={{textAlign:'center'}}>Expense-{formatAmount(totalExp)}</h3>
-          <MainDoughnutComponent val={ChartDataExp} />
-        </div>
+      if (a === 0) {
+        resolve('resolved');
+      } else {
+        reject('rejected');
+      }
+
+    });
+  };
+
+  const UpdateAmt = (type, category, amount) => {
+    const state_type = type === 'Income' ? incomeCategories : expenseCategories;
+
+    return updateCategories(category, amount, state_type, type);
+  }
+
+  useEffect(() => {
+    localStorage.setItem('income-values', JSON.stringify(incomeCategories));
+  }, [incomeCategories]);
+
+  useEffect(() => {
+    localStorage.setItem('expense-values', JSON.stringify(expenseCategories));
+  }, [expenseCategories]);
+
+  return (
+    <div className='App-flex-column'>
+      <div className='Main-Doughnut-Component Income-Bottom'>
+        <h3 style={{ textAlign: 'center' }}>Income-{formatAmount(totalIC)}</h3>
+        <DoughnutComponent val={ChartDataIC} />
       </div>
 
-      </Context.Provider>
-      
-      )
+      <div className='Form-Main-Component-width'>
+        <FormMainComponent UpdateAmt={UpdateAmt} />
+      </div>
+
+      <div className='Main-Doughnut-Component Expense-Bottom'>
+        <h3 style={{ textAlign: 'center' }}>Expense-{formatAmount(totalExp)}</h3>
+        <DoughnutComponent val={ChartDataExp} />
+      </div>
+    </div>
+  );
 }
-
-

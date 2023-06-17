@@ -20,25 +20,34 @@ body {
   direction: row;
 }
 
-.App-flex-column{
-    display: grid;
+.App-flex-column {
+  display: grid;
+  grid-gap: 10px;
+}
+
+@media (min-width: 1024px) {
+  
+  .App-flex-column {
     grid-template-columns: repeat(3, 1fr);
-    grid-gap: 10px;
+    margin-top: 5rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+   
+  .Form-Main-Component{
+    margin-top: 2rem;
+    height: 30rem;
+  }
 }
 
 .Main-Doughnut-Component{
   background-color: aliceblue;
-  margin-top: 100px;
-  margin-left: 20px;
-  margin-right: 20px;
-  border-radius: 10px;
+  border-radius: 10px; 
   padding: 15px;
 }
 
 .Form-Main-Component{
-  height: 500px;
   background-color:aliceblue;
-  margin-top: 75px;
   text-align: center;
   border-radius: 15px;
 }
@@ -46,12 +55,18 @@ body {
 .Expense-input input{
   margin-top: 5px;
   margin-bottom: 5px;
-  width: 50%  ;
+  width: 45%  ;
   margin: auto;
   border: 0px;
   background-color: aliceblue;
   border-bottom:2px solid  #555455;
   outline: none;
+}
+
+.Expense-input{
+  display: flex;
+  flex-direction: row;
+  height: 60px;
 }
 
 .Display-Name{
@@ -115,4 +130,36 @@ div::-webkit-scrollbar-thumb:hover {
 .MoneyOffCsredIcon {
   width: 24px;
   height: 24px;
+}
+
+@media (max-width : 1024px) {
+  
+  .Expense-Bottom{
+    width: 95%;
+    margin: auto;
+  }
+  .Income-Bottom{
+    width: 95%;
+    margin: auto;
+  }
+  
+  .Form-Main-Component-width{
+    width: 90%;
+    margin: auto;
+  }
+
+  .Form-Main-Component{
+    height: 40rem;
+  }
+}
+
+.manage-overflow{
+  overflow:auto;
+  height: 12rem;
+}
+
+@media (min-width:417px) and (max-width:1023px) {
+  .manage-overflow{
+    height: 20rem;
+  }
 }
