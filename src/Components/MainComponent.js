@@ -45,7 +45,6 @@ export default function FormValues() {
     const storedData = localStorage.getItem('expense-values');
     return storedData ? JSON.parse(storedData) : initialState.expenseCategories;
   });
-
   useEffect(() => {
     const res1 = getValues(incomeCategories);
     const res2 = getValues(expenseCategories);
@@ -81,7 +80,8 @@ export default function FormValues() {
         ],
       });
     }
-
+    console.log("?");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getValues = (Values) => {
